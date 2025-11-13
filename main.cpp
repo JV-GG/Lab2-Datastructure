@@ -1,6 +1,10 @@
 #include "functionality.hpp"
 #include <iostream>
 #include <string>
+#include <limits>
+
+// Forward declaration for ambulance dispatcher module
+int runAmbulanceDispatcher();
 
 static int readIntInRange(const std::string &prompt, int minVal, int maxVal) {
 	while (true) {
@@ -43,7 +47,11 @@ static void showMenu() {
 	std::cout << "0. Exit\n";
 }
 
-int main() {
+/**
+ * Runs the emergency department officer module.
+ * This function contains the original main() logic.
+ */
+int runEmergencyDepartmentOfficer() {
 	EmergencyDepartmentSystem system;
 	while (true) {
 		showMenu();
@@ -65,6 +73,46 @@ int main() {
 			case 0:
 				std::cout << "Goodbye!\n";
 				return 0;
+		}
+	}
+}
+
+/**
+ * Displays the central integrated menu.
+ */
+static void showCentralMenu() {
+	std::cout << "\n=== Central System Menu ===\n";
+	std::cout << "1. Emergency Department Officer\n";
+	std::cout << "2. Ambulance Dispatcher\n";
+	std::cout << "0. Exit\n";
+}
+
+// Original main() function - kept for standalone compilation
+// Uncomment this and comment the integrated main() below to use standalone mode
+/*
+int main() {
+	return runEmergencyDepartmentOfficer();
+}
+*/
+
+// Integrated main() function with central menu
+int main() {
+	while (true) {
+		showCentralMenu();
+		int choice = readIntInRange("Select a module: ", 0, 2);
+		switch (choice) {
+			case 1:
+				runEmergencyDepartmentOfficer();
+				break;
+			case 2:
+				runAmbulanceDispatcher();
+				break;
+			case 0:
+				std::cout << "Exiting system. Goodbye!\n";
+				return 0;
+			default:
+				std::cout << "Invalid option. Please try again.\n";
+				break;
 		}
 	}
 }
