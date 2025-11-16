@@ -40,6 +40,10 @@ public:
     void addSupplyStock(const std::string& type, int quantity, const std::string& batch);
     Supply useLastAddedSupply();    // Returns empty supply if stack is empty
     void viewCurrentSupplies() const;  // Display all supplies from top to bottom
+
+    // Persistence helpers for Medical Supply Manager role
+    bool saveToCsv(const std::string& filename) const; // Save current supplies to CSV
+    bool loadFromCsv(const std::string& filename);     // Load supplies from CSV (replaces current stack)
 };
 
 #endif // SUPPLYSTACK_HPP

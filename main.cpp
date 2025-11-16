@@ -1,10 +1,14 @@
 #include "functionality.hpp"
+#include "PatientAdmission.hpp"
+#include "SupplyStack.hpp"
 #include <iostream>
 #include <string>
 #include <limits>
 
-// Forward declaration for ambulance dispatcher module
+// Forward declarations for other role modules
 int runAmbulanceDispatcher();
+int runPatientAdmissionClerk();
+int runMedicalSupplyManager();
 
 static int readIntInRange(const std::string &prompt, int minVal, int maxVal) {
 	while (true) {
@@ -48,6 +52,98 @@ static void showMenu() {
 }
 
 /**
+ * Runs the patient admission clerk module.
+ * Integrates the PatientQueue role with its own submenu.
+ */
+int runPatientAdmissionClerk() {
+	PatientQueue queue;
+	while (true) {
+		std::cout << "\n=== Patient Admission Clerk Menu ===\n";
+		std::cout << "1. Admit patient\n";
+		std::cout << "2. Discharge earliest admitted patient\n";
+		std::cout << "3. View patient queue\n";
+		std::cout << "0. Return to central menu\n";
+
+		int choice = readIntInRange("Select an option: ", 0, 3);
+		switch (choice) {
+			case 1: {
+				std::string id = readNonEmptyLine("Enter patient ID: ");
+				std::string name = readNonEmptyLine("Enter patient name: ");
+				std::string condition = readNonEmptyLine("Enter condition type: ");
+				queue.admitPatient(id, name, condition);
+				break;
+			}
+			case 2: {
+				queue.dischargePatient();
+				break;
+			}
+			case 3: {
+				queue.viewPatientQueue();
+				break;
+			}
+			case 0:
+				std::cout << "Returning to central menu...\n";
+				return 0;
+		}
+	}
+}
+
+/**
+ * Runs the medical supply manager module.
+ * Integrates the SupplyStack role with its own submenu.
+ */
+int runMedicalSupplyManager() {
+	SupplyStack stack;
+	const std::string csvFilename = "data/MedicalSupplies.csv";
+
+	// Attempt to load existing supplies from CSV
+	if (stack.loadFromCsv(csvFilename)) {
+		std::cout << "Loaded existing supplies from '" << csvFilename << "'.\n";
+	} else {
+		std::cout << "No existing supplies file found. Starting with empty inventory.\n";
+	}
+	while (true) {
+		std::cout << "\n=== Medical Supply Manager Menu ===\n";
+		std::cout << "1. Add supply stock\n";
+		std::cout << "2. Use last added supply\n";
+		std::cout << "3. View current supplies\n";
+		std::cout << "0. Return to central menu\n";
+
+		int choice = readIntInRange("Select an option: ", 0, 3);
+		switch (choice) {
+			case 1: {
+				std::string type = readNonEmptyLine("Enter supply type: ");
+				int quantity = readIntInRange("Enter quantity: ", 1, std::numeric_limits<int>::max());
+				std::string batch = readNonEmptyLine("Enter batch identifier: ");
+				stack.addSupplyStock(type, quantity, batch);
+				std::cout << "Supply stock added.\n";
+				stack.saveToCsv(csvFilename);
+				break;
+			}
+			case 2: {
+				Supply used = stack.useLastAddedSupply();
+				if (used.type.empty() && used.quantity == 0 && used.batch.empty()) {
+					std::cout << "No supplies available to use.\n";
+				} else {
+					std::cout << "Using supply -> Type: " << used.type
+					          << " | Quantity: " << used.quantity
+					          << " | Batch: " << used.batch << "\n";
+					stack.saveToCsv(csvFilename);
+				}
+				break;
+			}
+			case 3: {
+				stack.viewCurrentSupplies();
+				break;
+			}
+			case 0:
+				std::cout << "Returning to central menu...\n";
+				return 0;
+		}
+	}
+}
+
+/**
  * Runs the emergency department officer module.
  * This function contains the original main() logic.
  */
@@ -81,9 +177,11 @@ int runEmergencyDepartmentOfficer() {
  * Displays the central integrated menu.
  */
 static void showCentralMenu() {
-	std::cout << "\n=== Central System Menu ===\n";
-	std::cout << "1. Emergency Department Officer\n";
-	std::cout << "2. Ambulance Dispatcher\n";
+	std::cout << "\n=== Hospital Patient Care Management System ===\n";
+	std::cout << "1. Patient Admission Clerk\n";
+	std::cout << "2. Medical Supply Manager\n";
+	std::cout << "3. Emergency Department Officer\n";
+	std::cout << "4. Ambulance Dispatcher\n";
 	std::cout << "0. Exit\n";
 }
 
@@ -99,12 +197,18 @@ int main() {
 int main() {
 	while (true) {
 		showCentralMenu();
-		int choice = readIntInRange("Select a module: ", 0, 2);
+		int choice = readIntInRange("Select a module: ", 0, 4);
 		switch (choice) {
 			case 1:
-				runEmergencyDepartmentOfficer();
+				runPatientAdmissionClerk();
 				break;
 			case 2:
+				runMedicalSupplyManager();
+				break;
+			case 3:
+				runEmergencyDepartmentOfficer();
+				break;
+			case 4:
 				runAmbulanceDispatcher();
 				break;
 			case 0:

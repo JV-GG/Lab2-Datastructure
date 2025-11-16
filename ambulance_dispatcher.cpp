@@ -19,7 +19,7 @@ const int MAX_AMBULANCES = 10;
 const int DUTY_HOURS = 8;
 const std::time_t DUTY_SECONDS = static_cast<std::time_t>(DUTY_HOURS) * 3600;
 const int BASE_HOUR = 0; // shifts always start counting from midnight
-const char* const SCHEDULE_FILENAME = "ambulance_schedule.csv";
+const char* const SCHEDULE_FILENAME = "data/ambulance_schedule.csv";
 
 /**
  * Basic data holder for ambulance information.
@@ -540,11 +540,5 @@ int runAmbulanceDispatcher() {
     return 0;
 }
 
-// Original main() function - kept for standalone compilation
-// Uncomment this and comment the main() in main.cpp to use standalone mode
-/*
-int main() {
-    return runAmbulanceDispatcher();
-}
-*/
+
 

@@ -1,7 +1,7 @@
 #include "PatientAdmission.hpp"
 
 // Constructor
-PatientQueue::PatientQueue() : front(nullptr), rear(nullptr), size(0), currentFilename("PatientAdmission.csv") {
+PatientQueue::PatientQueue() : front(nullptr), rear(nullptr), size(0), currentFilename("data/PatientAdmission.csv") {
     // Load existing data from default file on startup
     loadFromFile(currentFilename);
 }
