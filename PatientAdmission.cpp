@@ -33,7 +33,7 @@ string PatientQueue::trim(const string& str) {
     return str.substr(first, last - first + 1);
 }
 
-// Functionality 1: Admit Patient (Enqueue)
+// Functionality 1: Admit Patient (Start queue)
 void PatientQueue::admitPatient(string id, string name, string conditionType) {
     name = toUpperCase(name);
     conditionType = toUpperCase(conditionType);

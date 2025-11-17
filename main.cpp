@@ -15,7 +15,7 @@ static int readIntInRange(const std::string &prompt, int minVal, int maxVal) {
 		std::cout << prompt;
 		std::string line;
 		if (!std::getline(std::cin, line)) {
-			return minVal; // fallback on EOF
+			return minVal;
 		}
 		try {
 			int val = std::stoi(line);
@@ -145,7 +145,6 @@ int runMedicalSupplyManager() {
 
 /**
  * Runs the emergency department officer module.
- * This function contains the original main() logic.
  */
 int runEmergencyDepartmentOfficer() {
 	EmergencyDepartmentSystem system;
@@ -185,12 +184,6 @@ static void showCentralMenu() {
 	std::cout << "0. Exit\n";
 }
 
-// Original main() function - kept for standalone compilation
-// Uncomment this and comment the integrated main() below to use standalone mode
-/*
-int main() {
-	return runEmergencyDepartmentOfficer();
-}
 */
 
 // Integrated main() function with central menu
