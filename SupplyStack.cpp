@@ -139,9 +139,9 @@ bool SupplyStack::loadFromCsv(const std::string& filename) {
     std::string line;
     bool firstLine = true;
 
-    // We will reconstruct the stack in the same top-to-bottom order
-    // by temporarily storing entries and then pushing them in reverse.
-    std::vector<Supply> supplies;
+    // Use a temporary stack to store supplies while reading
+    // Then transfer them to main stack in correct order
+    SupplyStack tempStack;
 
     while (std::getline(inFile, line)) {
         if (firstLine) {
@@ -171,12 +171,13 @@ bool SupplyStack::loadFromCsv(const std::string& filename) {
         s.type = type;
         s.quantity = quantity;
         s.batch = batch;
-        supplies.push_back(s);
+        tempStack.push(s);
     }
 
-    // Rebuild stack: last element in vector should be pushed first
-    for (auto it = supplies.rbegin(); it != supplies.rend(); ++it) {
-        push(*it);
+    // Transfer from temp stack to main stack to maintain correct order
+    // (first read item should be at top of main stack)
+    while (!tempStack.isEmpty()) {
+        push(tempStack.pop());
     }
 
     return true;
