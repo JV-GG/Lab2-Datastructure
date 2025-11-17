@@ -33,7 +33,7 @@ void EmergencyDepartmentSystem::viewPendingCases() const {
 		std::cout << "No pending emergency cases.\n";
 		return;
 	}
-	std::priority_queue<EmergencyCase, std::vector<EmergencyCase>, EmergencyCaseComparator> temp = cases;
+	std::priority_queue<EmergencyCase, std::deque<EmergencyCase>, EmergencyCaseComparator> temp = cases;
 	std::cout << "Pending Emergency Cases (highest priority first):\n";
 	while (!temp.empty()) {
 		const EmergencyCase &c = temp.top();

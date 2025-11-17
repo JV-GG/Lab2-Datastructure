@@ -2,7 +2,7 @@
 
 #include <queue>
 #include <string>
-#include <vector>
+#include <deque>
 
 struct EmergencyCase {
 	int id;
@@ -25,7 +25,7 @@ public:
 
 private:
 	int nextId;
-	std::priority_queue<EmergencyCase, std::vector<EmergencyCase>, EmergencyCaseComparator> cases;
+	std::priority_queue<EmergencyCase, std::deque<EmergencyCase>, EmergencyCaseComparator> cases;
 };
 
 
